@@ -15,6 +15,8 @@ namespace SimpleChatBot
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc();
+            // services.AddRouting();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -25,9 +27,33 @@ namespace SimpleChatBot
                 app.UseDeveloperExceptionPage();
             }
 
-            app.Run(async (context) =>
+            // app.UseDefaultFiles();
+            // app.UseStaticFiles();
+            
+            // app.UseMvcWithDefaultRoute();
+
+            // app.Run(async (context) =>
+            // {
+            //     await context.Response.WriteAsync("Hello World!");
+            // });
+
+            app.UseMvc(routes =>
             {
-                await context.Response.WriteAsync("Hello World!");
+                // routes.MapRoute(
+                //     name: "about",
+                //     template: "about",
+                //     defaults: new { controller = "Home", action = "About" }
+                // );
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}"
+                );
+                // 跟上面設定的 default 效果一樣
+                //routes.MapRoute(
+                //    name: "default",
+                //    template: "{controller}/{action}/{id?}",
+                //    defaults: new { controller = "Home", action = "Index" }
+                //);
             });
         }
     }
