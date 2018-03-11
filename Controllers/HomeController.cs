@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 
-public class HomeController : Controller
+namespace SimpleChatBot.Controllers
 {
-    public IActionResult Index()
+    public class HomeController : Controller
     {
-        // var message = new MessageModel();
-        // return View(model: message);
-        return View();
-    }
-}   
+        public IActionResult Index()
+        {
+            return View();
+        }
+    }   
+}

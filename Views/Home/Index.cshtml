@@ -30,71 +30,26 @@
                             </div>
                         <div class="panel-collapse collapse in" id="collapseOne" aria-expanded="true">
                             <div class="panel-body">
-                                <ul class="chat">
-                                    <li class="left clearfix"><span class="chat-img pull-left">
-                                        <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" class="img-circle" />
-                                    </span>
+                                <ul class="chat" id="chat">
+                                    <li class="left clearfix">
+                                        <span class="chat-img pull-left">
+                                            <img src="/Images/profile.jpg" alt="User Avatar" class="img-circle" />
+                                        </span>
                                         <div class="chat-body clearfix">
                                             <div class="header">
-                                                <strong class="primary-font">Jack Sparrow</strong> <small class="pull-right text-muted">
-                                                    <span class="glyphicon glyphicon-time"></span>12 mins ago</small>
+                                                <strong class="primary-font">克里斯小幫手</strong> 
+                                                <small class="text-muted"><span class="glyphicon glyphicon-time"></span>12 mins ago</small>
                                             </div>
-                                            <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
-                                                dolor, quis ullamcorper ligula sodales.
-                                            </p>
-                                        </div>
-                                    </li>
-                                    <li class="right clearfix"><span class="chat-img pull-right">
-                                        <img src="http://placehold.it/50/FA6F57/fff&text=ME" alt="User Avatar" class="img-circle" />
-                                    </span>
-                                        <div class="chat-body clearfix">
-                                            <div class="header">
-                                                <small class=" text-muted"><span class="glyphicon glyphicon-time"></span>13 mins ago</small>
-                                                <strong class="pull-right primary-font">Bhaumik Patel</strong>
-                                            </div>
-                                            <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
-                                                dolor, quis ullamcorper ligula sodales.
-                                            </p>
-                                        </div>
-                                    </li>
-                                    <li class="left clearfix"><span class="chat-img pull-left">
-                                        <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" class="img-circle" />
-                                    </span>
-                                        <div class="chat-body clearfix">
-                                            <div class="header">
-                                                <strong class="primary-font">Jack Sparrow</strong> <small class="pull-right text-muted">
-                                                    <span class="glyphicon glyphicon-time"></span>14 mins ago</small>
-                                            </div>
-                                            <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
-                                                dolor, quis ullamcorper ligula sodales.
-                                            </p>
-                                        </div>
-                                    </li>
-                                    <li class="right clearfix"><span class="chat-img pull-right">
-                                        <img src="http://placehold.it/50/FA6F57/fff&text=ME" alt="User Avatar" class="img-circle" />
-                                    </span>
-                                        <div class="chat-body clearfix">
-                                            <div class="header">
-                                                <small class=" text-muted"><span class="glyphicon glyphicon-time"></span>15 mins ago</small>
-                                                <strong class="pull-right primary-font">Bhaumik Patel</strong>
-                                            </div>
-                                            <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
-                                                dolor, quis ullamcorper ligula sodales.
-                                            </p>
+                                            <p>您好，我是克里斯小幫手，很高興為您服務。</p>
                                         </div>
                                     </li>
                                 </ul>
                             </div>
                             <div class="panel-footer">
                                 <div class="input-group">
-                                    <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
+                                    <input id="input-message" type="text" class="form-control input-sm" placeholder="請輸入訊息..." />
                                     <span class="input-group-btn">
-                                        <button class="btn btn-warning btn-sm" id="btn-chat">
-                                            Send</button>
+                                        <button class="btn btn-warning btn-sm" id="btn-chat">送出</button>
                                     </span>
                                 </div>
                             </div>
@@ -123,7 +78,7 @@
             {
                 margin-bottom: 10px;
                 padding-bottom: 5px;
-                border-bottom: 1px dotted #B3A9A9;
+                //border-bottom: 1px dotted #B3A9A9;
             }
 
             .chat li.left .chat-body
@@ -134,13 +89,19 @@
             .chat li.right .chat-body
             {
                 margin-right: 60px;
+                text-align: right;
             }
-
 
             .chat li .chat-body p
             {
                 margin: 0;
                 color: #777777;
+                width: 70%
+            }
+
+            .chat li.right .chat-body .text-muted
+            {
+                margin-left: 5px;
             }
 
             .panel .slidedown .glyphicon, .chat .glyphicon
@@ -173,5 +134,73 @@
             }
 
         </style>
+
+        <script type="text/javascript">
+        $(document).ready(function () {
+
+            function sendMessage() {
+                var content = $('#input-message').val();
+
+                if(content !== ''){
+                    sendMessageHtml(content);
+                    $('#input-message').val('');
+
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("Send", "Message")",
+                        data: { 'SendContent': content },
+                        dataType: "json",
+                        /*headers: {
+                        },*/
+                        success: function(result) {
+                            console.log(result);
+                            /*if (checkTimeout(result)) {
+
+                                if (result.isSuccess) {
+                                    $('#content').val('');
+                                    var model = result.messageModel;
+                                    if ($('.' + model.CreateDate).length > 0) {
+                                        $('.' + model.CreateDate).after(bindMessageHtml(model));
+                                    } else {
+                                        $('#leave-message').after(bindMessageHtml(model));
+                                    }
+                                } else {
+                                    alertMessage('新增失敗，請稍後再試！', 'danger');
+                                }
+                            }*/
+                        },
+                        error: function(result) {
+                                alertMessage('伺服器忙碌中，請稍後再試！', 'danger');
+                        }
+                    });
+                } else {
+                    alert('請輸入訊息');
+                }
+            }
+
+            function sendMessageHtml(message){
+                var html = '';
+                html += '<li class="right clearfix">';
+                html += '   <span class="chat-img pull-right">';
+                html += '       <img src="http://placehold.it/50/FA6F57/fff&text=ME" alt="User Avatar" class="img-circle" />';
+                html += '   </span>';
+                html += '   <div class="chat-body clearfix">';
+                html += '       <p class="pull-right p-text">' + message + '<small class="text-muted"><span class="glyphicon glyphicon-time"></span>13 mins ago</small></p>';
+                html += '   </div>';
+                html += '</li>';
+                $('#chat').append(html);
+            }
+
+            $('#btn-chat').click(function(){
+                sendMessage();
+            });
+
+            $('#input-message').keypress(function(e) {
+                if(e.keyCode === 13){
+                    sendMessage();
+                }
+            });
+        });
+        </script>
     </body>
 </html>
