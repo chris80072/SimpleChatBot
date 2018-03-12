@@ -2,6 +2,7 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using SimpleChatBot.DAL;
 using SimpleChatBot.Domain;
 using SimpleChatBot.Domain.LUIS;
 using SimpleChatBot.Domain.Message;
@@ -10,9 +11,17 @@ namespace SimpleChatBot.Service
 {
     public class MessageService : IMessageService 
     {
+        private readonly IMessageDAL _messageDAL;
+
+        public MessageService(IMessageDAL messageDAL)
+        {
+            _messageDAL = messageDAL;
+        }
+
         public Message Identify(Message message) {
             message.Intent = GetLUISParseIntent(message.SendContent).Result;
             var result = GetResponseMessage(message);
+            _messageDAL.Save(result);
             return result;
         }
 

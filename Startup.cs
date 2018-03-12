@@ -6,24 +6,39 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using SimpleChatBot.DAL;
 using SimpleChatBot.Service;
 
 namespace SimpleChatBot
 {
     public class Startup
     {
+        private readonly IConfiguration _config;
+
+        public Startup(IConfiguration config)
+        {
+            _config = config;
+        }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddDbContext<MessageContext>(options =>
+            {
+                options.UseSqlServer(_config.GetConnectionString("DefaultConnection"));
+            });
             services.AddScoped<IMessageService, MessageService>();
+            services.AddScoped<IMessageDAL, MessageDAL>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, MessageContext messageContext)
         {
             if (env.IsDevelopment())
             {
@@ -39,22 +54,15 @@ namespace SimpleChatBot
 
             app.UseMvc(routes =>
             {
-                // routes.MapRoute(
-                //     name: "about",
-                //     template: "about",
-                //     defaults: new { controller = "Home", action = "About" }
-                // );
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}"
                 );
-                // 跟上面設定的 default 效果一樣
-                //routes.MapRoute(
-                //    name: "default",
-                //    template: "{controller}/{action}/{id?}",
-                //    defaults: new { controller = "Home", action = "Index" }
-                //);
             });
+
+            // 建立資料庫            
+            messageContext.Database.EnsureCreated();
+            app.UseMvcWithDefaultRoute();
         }
     }
 }

@@ -19,6 +19,10 @@ namespace SimpleChatBot
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((webHostBuilder, configurationBinder) =>
+                {
+                    configurationBinder.AddJsonFile("settings.json", optional: true);
+                })
                 .UseStartup<Startup>()
                 .Build();
     }
