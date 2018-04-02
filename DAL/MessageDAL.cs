@@ -10,7 +10,7 @@ namespace SimpleChatBot.DAL
             _context = context;
         }
 
-        public void Save(Message message)
+        public void SaveMessage(Message message)
         {
             _context.Messages.Add(message);
             _context.SaveChanges();

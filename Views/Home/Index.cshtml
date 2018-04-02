@@ -15,19 +15,19 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     </head>
     <body>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-10">
-                    <div class="message-box">
-                        <div class="panel panel-primary">
-                            <div class="panel-heading" id="accordion">
-                                <span class="glyphicon glyphicon-comment"></span> Chat
-                                <div class="btn-group pull-right">
-                                    <a type="button" class="btn btn-default btn-xs" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-                                        <span class="glyphicon glyphicon-chevron-down"></span>
-                                    </a>
-                                </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10">
+                <div class="message-box">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading" id="accordion">
+                            <span class="glyphicon glyphicon-comment"></span> 克里斯小幫手
+                            <div class="btn-group pull-right">
+                                <a type="button" class="btn btn-default btn-xs" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                    <span class="glyphicon glyphicon-chevron-down"></span>
+                                </a>
                             </div>
+                        </div>
                         <div class="panel-collapse collapse in" id="collapseOne" aria-expanded="true">
                             <div class="panel-body">
                                 <ul class="chat" id="chat">
@@ -36,11 +36,11 @@
                                             <img src="/Images/profile.jpg" alt="User Avatar" class="img-circle" />
                                         </span>
                                         <div class="chat-body clearfix">
-                                            <div class="header">
-                                                <strong class="primary-font">克里斯小幫手</strong> 
-                                                <small class="text-muted"><span class="glyphicon glyphicon-time"></span>12 mins ago</small>
+                                            <div class="msg_border msg-left">
+                                                <span class="arrow_l_int arrow"></span>
+                                                <span class="arrow_l_out arrow"></span>
+                                                <p>您好，很高興為您服務。</p>
                                             </div>
-                                            <p>您好，我是克里斯小幫手，很高興為您服務。</p>
                                         </div>
                                     </li>
                                 </ul>
@@ -54,95 +54,151 @@
                                 </div>
                             </div>
                         </div>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <style>
-            .message-box{
-                margin-top: 100px;
-            }
-            .btn-group{
-                display: none;
-            }
-            .chat
-            {
-                list-style: none;
-                margin: 0;
-                padding: 0;
-            }
+    <style>
+        .message-box {
+            margin-top: 100px;
+        }
 
-            .chat li
-            {
-                margin-bottom: 10px;
-                padding-bottom: 5px;
-                //border-bottom: 1px dotted #B3A9A9;
-            }
+        .btn-group {
+            display: none;
+        }
 
-            .chat li.left .chat-body
-            {
-                margin-left: 60px;
-            }
+        .chat {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
 
-            .chat li.right .chat-body
-            {
-                margin-right: 60px;
-                text-align: right;
-            }
+        .chat li {
+            margin-bottom: 10px;
+            padding-bottom: 5px; //border-bottom: 1px dotted #B3A9A9;
+        }
 
-            .chat li .chat-body p
-            {
-                margin: 0;
-                color: #777777;
-                width: 70%
-            }
+        .chat li.left .chat-body {
+            margin-left: 60px;
+        }
 
-            .chat li.right .chat-body .text-muted
-            {
-                margin-left: 5px;
-            }
+        .chat li.left .chat-body .text-muted {
+            /* margin-left: 5px; */
+            display: inherit;
+        }
 
-            .panel .slidedown .glyphicon, .chat .glyphicon
-            {
-                margin-right: 5px;
-            }
+        .chat li.right .chat-body {
+            margin-right: 60px;
+            text-align: right;
+        }
 
-            .panel-body
-            {
-                overflow-y: scroll;
-                height: 500px;
-            }
+        .chat li.right .chat-body .text-muted {
+            margin-left: 5px;
+            display: inherit;
+        }
 
-            ::-webkit-scrollbar-track
-            {
-                -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-                background-color: #F5F5F5;
-            }
+        .chat li .chat-body p {
+            margin: 0;
+            color: #777777;
+            /* width: 70% */
+        }
 
-            ::-webkit-scrollbar
-            {
-                width: 12px;
-                background-color: #F5F5F5;
-            }
 
-            ::-webkit-scrollbar-thumb
-            {
-                -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-                background-color: #555;
-            }
 
-        </style>
+        .panel .slidedown .glyphicon,
+        .chat .glyphicon {
+            margin-right: 5px;
+        }
 
-        <script type="text/javascript">
+        .panel-body {
+            overflow-y: scroll;
+            height: 500px;
+        }
+
+        ::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+            background-color: #F5F5F5;
+        }
+
+        ::-webkit-scrollbar {
+            width: 12px;
+            background-color: #F5F5F5;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+            background-color: #555;
+        }
+
+        .msg_border {
+            display: inline-block;
+            /* text-align: center; */
+            position: relative;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .msg-right {
+            background: #CDE1F7;
+            margin-right: 15px;
+        }
+
+        .msg-left {
+            background: #CDF7DA;
+            margin-left: 15px;
+        }
+
+        .msg_border .arrow {
+            width: 0px;
+            height: 0px;
+            border-width: 15px;
+            border-style: solid;
+            position: absolute;
+        }
+
+        /*箭頭右*/
+
+        .msg_border .arrow_r_int {
+            border-color: transparent transparent transparent #CDE1F7;
+            top: 20%;
+            right: -30px;
+        }
+
+        /*箭頭右-邊框*/
+
+        .msg_border .arrow_r_out {
+            border-color: transparent transparent transparent #CDE1F7;
+            top: 20%;
+            right: -29px;
+        }
+
+        /*箭頭左*/
+
+        .msg_border .arrow_l_int {
+            border-color: transparent #CDF7DA transparent transparent;
+            top: 20%;
+            left: -30px;
+        }
+
+        /*箭頭左-邊框*/
+
+        .msg_border .arrow_l_out {
+            border-color: transparent #CDF7DA transparent transparent;
+            top: 20%;
+            left: -29px;
+        }
+    </style>
+
+    <script type="text/javascript">
         $(document).ready(function () {
 
             function sendMessage() {
                 var content = $('#input-message').val();
 
-                if(content !== ''){
-                    sendMessageHtml(content);
+                if (content !== '') {
+                    randerUserMessageHtml(content);
                     $('#input-message').val('');
 
                     $.ajax({
@@ -152,25 +208,16 @@
                         dataType: "json",
                         /*headers: {
                         },*/
-                        success: function(result) {
+                        success: function (result) {
                             console.log(result);
-                            /*if (checkTimeout(result)) {
-
-                                if (result.isSuccess) {
-                                    $('#content').val('');
-                                    var model = result.messageModel;
-                                    if ($('.' + model.CreateDate).length > 0) {
-                                        $('.' + model.CreateDate).after(bindMessageHtml(model));
-                                    } else {
-                                        $('#leave-message').after(bindMessageHtml(model));
-                                    }
-                                } else {
-                                    alertMessage('新增失敗，請稍後再試！', 'danger');
-                                }
-                            }*/
+                            if (result.isSuccess) {
+                                randerBotMessageHtml(result.message.ResponseContent)
+                            } else {
+                                alert('伺服器忙碌中，請稍後再試！');
+                            }
                         },
-                        error: function(result) {
-                                alertMessage('伺服器忙碌中，請稍後再試！', 'danger');
+                        error: function (result) {
+                            alert('伺服器忙碌中，請稍後再試！');
                         }
                     });
                 } else {
@@ -178,29 +225,49 @@
                 }
             }
 
-            function sendMessageHtml(message){
+            function randerUserMessageHtml(message) {
                 var html = '';
                 html += '<li class="right clearfix">';
                 html += '   <span class="chat-img pull-right">';
                 html += '       <img src="http://placehold.it/50/FA6F57/fff&text=ME" alt="User Avatar" class="img-circle" />';
                 html += '   </span>';
                 html += '   <div class="chat-body clearfix">';
-                html += '       <p class="pull-right p-text">' + message + '<small class="text-muted"><span class="glyphicon glyphicon-time"></span>13 mins ago</small></p>';
+                html += '       <div class="msg_border msg-right"><span class="arrow_r_int arrow"></span><span class="arrow_r_out arrow"></span>';
+                html += '           <p class="pull-right p-text">' + message + '</p>';
+                html += '       </div>';
                 html += '   </div>';
                 html += '</li>';
+
                 $('#chat').append(html);
             }
 
-            $('#btn-chat').click(function(){
+            function randerBotMessageHtml(message) {
+                var html = '';
+                html += '<li class="left clearfix">';
+                html += '   <span class="chat-img pull-left">';
+                html += '       <img src="/Images/profile.jpg" alt="User Avatar" class="img-circle" />';
+                html += '   </span>';
+                html += '   <div class="chat-body clearfix">';
+                html += '       <div class="msg_border msg-left"><span class="arrow_l_int arrow"></span><span class="arrow_l_out arrow"></span>';
+                html += '           <p>' + message + '</p>';
+                html += '       </div>';
+                html += '   </div>';
+                html += '</li>';
+
+                $('#chat').append(html);
+            }
+
+            $('#btn-chat').click(function () {
                 sendMessage();
             });
 
-            $('#input-message').keypress(function(e) {
-                if(e.keyCode === 13){
+            $('#input-message').keypress(function (e) {
+                if (e.keyCode === 13) {
                     sendMessage();
                 }
             });
         });
-        </script>
-    </body>
+    </script>
+</body>
+
 </html>

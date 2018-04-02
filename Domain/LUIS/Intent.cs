@@ -5,5 +5,6 @@ namespace SimpleChatBot.Domain.LUIS
         public static string None = "None";
         public static string SayHello = "SayHello";
         public static string CheckOrder = "CheckOrder";
+        public static string EnterMobileNumber = "EnterMobileNumber";
     }
 }

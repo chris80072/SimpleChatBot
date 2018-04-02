@@ -4,6 +4,6 @@ namespace SimpleChatBot.Service
 {
     public interface IMessageService
     {
-        Message Identify(Message message);
+        void Identify(Message message);
     }
 }

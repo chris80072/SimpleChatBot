@@ -17,8 +17,8 @@ namespace SimpleChatBot.Controllers
         [HttpPost]
         public ActionResult Send(SimpleChatBot.Domain.Message.Message message)
         {
-            var resultMessage = _messageService.Identify(message);
-            var result = new MessageModel(resultMessage);
+            _messageService.Identify(message);
+            var result = new MessageModel(message);
             return Content(JsonConvert.SerializeObject(new { isSuccess = true, message = result }), "application/json");
         }
     } 

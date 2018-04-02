@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -6,26 +8,39 @@ using SimpleChatBot.DAL;
 using SimpleChatBot.Domain;
 using SimpleChatBot.Domain.LUIS;
 using SimpleChatBot.Domain.Message;
+using SimpleChatBot.Domain.Order;
 
 namespace SimpleChatBot.Service
 {
     public class MessageService : IMessageService 
     {
         private readonly IMessageDAL _messageDAL;
-
-        public MessageService(IMessageDAL messageDAL)
+        private readonly IOrderDetailDAL _orderDetailDAL;
+        public MessageService(IMessageDAL messageDAL, IOrderDetailDAL orderDetailDAL)
         {
             _messageDAL = messageDAL;
+            _orderDetailDAL = orderDetailDAL;
         }
 
-        public Message Identify(Message message) {
-            message.Intent = GetLUISParseIntent(message.SendContent).Result;
-            var result = GetResponseMessage(message);
-            _messageDAL.Save(result);
-            return result;
+        public void Identify(Message message) {
+            if(string.IsNullOrEmpty(message.Intent))
+            {
+                var response = GetLUISParseIntent(message.SendContent).Result;
+                message.SetLUISResonse(response);
+                this.SetResponseContent(message);
+            }
+            else
+            {
+                if(Intent.CheckOrder.Equals(message.Intent))
+                {
+                    var order = _orderDetailDAL.GetOrders(message.SendContent).FirstOrDefault();
+                    message.ResponseContent = order == null ? "請確認" : order.GetResopnseMessage();
+                }
+            }
+            _messageDAL.SaveMessage(message);
         }
 
-        private async Task<string> GetLUISParseIntent(string queryString) 
+        private async Task<Response> GetLUISParseIntent(string queryString) 
         { 
             using (var client = new HttpClient()) 
             { 
@@ -34,10 +49,7 @@ namespace SimpleChatBot.Service
                 if (msg.IsSuccessStatusCode) 
                 { 
                     var jsonResponse = await msg.Content.ReadAsStringAsync(); 
-                    var _Data = JsonConvert.DeserializeObject<Response>(jsonResponse); 
-                    // var entityFound = _Data.entities[0].entity;   
-                    // var topIntent = _Data.intents[0].intent;
-                    return _Data.intents[0].intent;
+                    return JsonConvert.DeserializeObject<Response>(jsonResponse); 
                 }
                 else
                 {
@@ -46,33 +58,40 @@ namespace SimpleChatBot.Service
             } 
         }
 
-        private Message GetResponseMessage(Message message)
+        private void SetResponseContent(Message message)
         {
-            var resutlt = new Message()
+            if(Intent.SayHello.Equals(message.Intent))
             {
-                SendContent = message.SendContent,
-                Intent = message.Intent,
-                Type = Domain.Message.Type.Text
-            };
-
-            if(Intent.None.Equals(message.Intent))
-            {
-                resutlt.ResponseContent = "對不起，無法辨認您輸入的內容！";
-            }
-            else if(Intent.SayHello.Equals(message.Intent))
-            {
-                resutlt.ResponseContent = "您好";
+                message.ResponseContent = "您好";
             }
             else if(Intent.CheckOrder.Equals(message.Intent))
             {
-                resutlt.ResponseContent = "請輸入訂單編號";
+                message.ResponseContent = "請輸入訂購人手機號碼";
+            }
+            else if(Intent.EnterMobileNumber.Equals(message.Intent)){
+                var mobile = message.Entity.Replace("-", "");
+                var orders = _orderDetailDAL.GetOrders(mobile);
+                if(orders.Count == 0)
+                {
+                    message.ResponseContent = "查無您的訂單資料！";
+                }
+                else
+                {
+                    message.ResponseContent = this.SetOrderDetailsResponseContent(orders);
+                }
             }
             else
             {
-                resutlt.ResponseContent = "對不起，無法辨認您輸入的內容！";
+                message.ResponseContent = "對不起，無法辨認您輸入的內容！";
             }
+        }
 
-            return resutlt;
+        private string SetOrderDetailsResponseContent(List<Detail> orders){
+            var result = "";
+            orders.ForEach(o => {
+                result += o.GetResopnseMessage() + "<br/>";
+            });
+            return result;
         }
     }
 }

@@ -33,8 +33,13 @@ namespace SimpleChatBot
             {
                 options.UseSqlServer(_config.GetConnectionString("DefaultConnection"));
             });
+            services.AddDbContext<OrderDetailContext>(options =>
+            {
+                options.UseSqlServer(_config.GetConnectionString("DefaultConnection"));
+            });
             services.AddScoped<IMessageService, MessageService>();
             services.AddScoped<IMessageDAL, MessageDAL>();
+            services.AddScoped<IOrderDetailDAL, OrderDetailDAL>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -4,6 +4,6 @@ namespace SimpleChatBot.DAL
 {
     public interface IMessageDAL
     {
-        void Save(Message message);
+        void SaveMessage(Message message);
     }
 }
