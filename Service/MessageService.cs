@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using log4net;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using SimpleChatBot.DAL;
@@ -16,6 +17,7 @@ namespace SimpleChatBot.Service
 {
     public class MessageService : IMessageService 
     {
+        private readonly static ILog _log = LogManager.GetLogger(typeof(Program));
         private readonly IMessageDAL _messageDAL;
         private readonly IOrderDetailDAL _orderDetailDAL;
         private readonly ISessionWapper _sessionWapper;
@@ -43,8 +45,15 @@ namespace SimpleChatBot.Service
                 HttpResponseMessage msg = await client.GetAsync(uri); 
                 if (msg.IsSuccessStatusCode) 
                 { 
-                    var jsonResponse = await msg.Content.ReadAsStringAsync(); 
-                    return JsonConvert.DeserializeObject<Response>(jsonResponse); 
+                    try{
+                        var jsonResponse = await msg.Content.ReadAsStringAsync(); 
+                        return JsonConvert.DeserializeObject<Response>(jsonResponse);
+                    }
+                    catch(Exception ex)
+                    {
+                        _log.Info($"Query String = {queryString}, Error Message = {ex.Message}, StackTrace = {ex.StackTrace}");
+                        return null;
+                    }
                 }
                 else
                 {
