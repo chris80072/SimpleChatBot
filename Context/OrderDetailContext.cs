@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SimpleChatBot.Domain.Order;
 
-namespace SimpleChatBot
+namespace SimpleChatBot.Context
 {
     public class OrderDetailContext: DbContext
     {

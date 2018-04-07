@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SimpleChatBot.Domain.Message;
 
-namespace SimpleChatBot
+namespace SimpleChatBot.Context
 {
     public class MessageContext: DbContext
     {

@@ -1,0 +1,136 @@
+.message-box {
+    margin-top: 100px;
+}
+
+.btn-group {
+    display: none;
+}
+
+.chat {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.chat li {
+    margin-bottom: 10px;
+    padding-bottom: 5px; 
+    /*border-bottom: 1px dotted #B3A9A9;*/
+}
+
+.chat li.left .chat-body {
+    margin-left: 60px;
+}
+
+.chat li.left .chat-body .text-muted {
+    /* margin-left: 5px; */
+    display: inherit;
+}
+
+.chat li.right .chat-body {
+    margin-right: 60px;
+    text-align: right;
+}
+
+.chat li.right .chat-body .text-muted {
+    margin-left: 5px;
+    display: inherit;
+}
+
+.chat li .chat-body p {
+    margin: 0;
+    color: #777777;
+    /* width: 70% */
+}
+
+.panel .slidedown .glyphicon,
+.chat .glyphicon {
+    margin-right: 5px;
+}
+
+.panel-body {
+    overflow-y: scroll;
+    height: 500px;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+    background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+    background-color: #555;
+}
+
+.msg_border {
+    display: inline-block;
+    /* text-align: center; */
+    position: relative;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.msg-right {
+    background: #CDE1F7;
+    margin-right: 15px;
+}
+
+.msg-left {
+    background: #CDF7DA;
+    margin-left: 15px;
+}
+
+.msg_border .arrow {
+    width: 0px;
+    height: 0px;
+    border-width: 15px;
+    border-style: solid;
+    position: absolute;
+}
+
+/*箭頭右*/
+
+.msg_border .arrow_r_int {
+    border-color: transparent transparent transparent #CDE1F7;
+    top: 20%;
+    right: -30px;
+}
+
+/*箭頭右-邊框*/
+
+.msg_border .arrow_r_out {
+    border-color: transparent transparent transparent #CDE1F7;
+    top: 20%;
+    right: -29px;
+}
+
+/*箭頭左*/
+
+.msg_border .arrow_l_int {
+    border-color: transparent #CDF7DA transparent transparent;
+    top: 20%;
+    left: -30px;
+}
+
+/*箭頭左-邊框*/
+
+.msg_border .arrow_l_out {
+    border-color: transparent #CDF7DA transparent transparent;
+    top: 20%;
+    left: -29px;
+}
+
+@media only screen and (max-width: 1400px) {
+    .message-box {
+        margin-top: 30px;
+    }
+    .panel-body {
+        height: 450px;
+    }
+}

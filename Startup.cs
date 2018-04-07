@@ -10,8 +10,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using SimpleChatBot.Context;
 using SimpleChatBot.DAL;
 using SimpleChatBot.Service;
+using SimpleChatBot.Wappers;
 
 namespace SimpleChatBot
 {
@@ -29,6 +31,17 @@ namespace SimpleChatBot
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            // Adds a default in-memory implementation of IDistributedCache.
+            services.AddDistributedMemoryCache();
+
+            services.AddSession(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.Cookie.Name = "testSession";
+                options.IdleTimeout = TimeSpan.FromMinutes(5);
+            });
+
             services.AddDbContext<MessageContext>(options =>
             {
                 options.UseSqlServer(_config.GetConnectionString("DefaultConnection"));
@@ -40,6 +53,9 @@ namespace SimpleChatBot
             services.AddScoped<IMessageService, MessageService>();
             services.AddScoped<IMessageDAL, MessageDAL>();
             services.AddScoped<IOrderDetailDAL, OrderDetailDAL>();
+            
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<ISessionWapper, SessionWapper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,11 +66,12 @@ namespace SimpleChatBot
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseSession();
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions()
             {
-                FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, @"Images")), RequestPath = new PathString("/Images")
+                FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, @"StaticFiles")), RequestPath = new PathString("/StaticFiles")
             });
 
             app.UseMvc(routes =>

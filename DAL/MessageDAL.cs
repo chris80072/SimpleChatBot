@@ -1,3 +1,4 @@
+using SimpleChatBot.Context;
 using SimpleChatBot.Domain.Message;
 
 namespace SimpleChatBot.DAL

@@ -5,7 +5,7 @@ namespace SimpleChatBot.DAL
 {
     public interface IOrderDetailDAL
     {
-        void SaveOrder(Detail detail);
         List<Detail> GetOrders(string mobile);
+        bool CancelOrder(string mobile, int orderId);
     }
 }

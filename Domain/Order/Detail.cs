@@ -10,7 +10,7 @@ namespace SimpleChatBot.Domain.Order
         [Required]
         public string ProductName { get; set; }
         public int Amount { get; set; }
-        public string UserName { get; set; }
+        public string RecipientName { get; set; }
         public string Mobile { get; set; }
         public string Email { get; set; }
         public string Address { get; set; }
@@ -18,12 +18,12 @@ namespace SimpleChatBot.Domain.Order
 
         public string GetResopnseMessage()
         {
-            return $"訂單編號: {Id}, 收件人: {this.GetEncodeUserName()}, 手機號碼: {this.GetEncodeMobile()}, 訂單狀態: {Type}";
+            return $"訂單編號: {Id}, 收件人: {this.GetEncodeRecipientNameName()}, 手機號碼: {this.GetEncodeMobile()}, 訂單狀態: {Type}";
         }
 
-        private string GetEncodeUserName()
+        private string GetEncodeRecipientNameName()
         {
-            char[] phraseAsChars = UserName.ToCharArray();
+            char[] phraseAsChars = RecipientName.ToCharArray();
             for(int i = 0; i < phraseAsChars.Length; i++)
             {
                 if(i == 0 || (i + 1) == phraseAsChars.Length)

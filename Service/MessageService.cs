@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using SimpleChatBot.DAL;
 using SimpleChatBot.Domain;
 using SimpleChatBot.Domain.LUIS;
 using SimpleChatBot.Domain.Message;
 using SimpleChatBot.Domain.Order;
+using SimpleChatBot.Wappers;
 
 namespace SimpleChatBot.Service
 {
@@ -16,27 +18,20 @@ namespace SimpleChatBot.Service
     {
         private readonly IMessageDAL _messageDAL;
         private readonly IOrderDetailDAL _orderDetailDAL;
-        public MessageService(IMessageDAL messageDAL, IOrderDetailDAL orderDetailDAL)
+        private readonly ISessionWapper _sessionWapper;
+
+        public MessageService(IMessageDAL messageDAL, IOrderDetailDAL orderDetailDAL, ISessionWapper sessionWapper)
         {
             _messageDAL = messageDAL;
             _orderDetailDAL = orderDetailDAL;
+            _sessionWapper = sessionWapper;
         }
 
-        public void Identify(Message message) {
-            if(string.IsNullOrEmpty(message.Intent))
-            {
-                var response = GetLUISParseIntent(message.SendContent).Result;
-                message.SetLUISResonse(response);
-                this.SetResponseContent(message);
-            }
-            else
-            {
-                if(Intent.CheckOrder.Equals(message.Intent))
-                {
-                    var order = _orderDetailDAL.GetOrders(message.SendContent).FirstOrDefault();
-                    message.ResponseContent = order == null ? "請確認" : order.GetResopnseMessage();
-                }
-            }
+        public void Identify(Message message) 
+        {
+            var response = GetLUISParseIntent(message.SendContent).Result;
+            message.SetLUISResonse(response);
+            this.SetResponseContent(message);
             _messageDAL.SaveMessage(message);
         }
 
@@ -60,29 +55,45 @@ namespace SimpleChatBot.Service
 
         private void SetResponseContent(Message message)
         {
+            var previousIntent = _sessionWapper.GetPreviousIntent();
+
             if(Intent.SayHello.Equals(message.Intent))
             {
-                message.ResponseContent = "您好";
+                message.ResponseContent = ResponseContent.Hello;
             }
             else if(Intent.CheckOrder.Equals(message.Intent))
             {
-                message.ResponseContent = "請輸入訂購人手機號碼";
+                message.ResponseContent = ResponseContent.EnterMobile;
             }
-            else if(Intent.EnterMobileNumber.Equals(message.Intent)){
-                var mobile = message.Entity.Replace("-", "");
-                var orders = _orderDetailDAL.GetOrders(mobile);
-                if(orders.Count == 0)
+            else if(Intent.EnterMobileNumber.Equals(message.Intent) && Intent.CheckOrder.Equals(previousIntent) && message.Entity != null)
+            {
+                this.QueryOrder(message);
+            }
+            else if(Intent.CancelOrder.Equals(message.Intent))
+            {
+                var orders = _sessionWapper.GetOrders();
+
+                if(orders == null || orders.Count == 0)
                 {
-                    message.ResponseContent = "查無您的訂單資料！";
+                    message.ResponseContent = ResponseContent.NoOrders;
+                }
+                else if(Intent.CancelOrder.Equals(previousIntent))
+                {
+                    this.CancelOrder(message);
                 }
                 else
                 {
-                    message.ResponseContent = this.SetOrderDetailsResponseContent(orders);
+                    message.ResponseContent = ResponseContent.EnterOrderId;
                 }
             }
             else
             {
-                message.ResponseContent = "對不起，無法辨認您輸入的內容！";
+                message.ResponseContent = ResponseContent.Unrecognizable;
+            }
+
+            if(!message.ResponseContent.Equals(ResponseContent.Unrecognizable))
+            {
+                _sessionWapper.SetPreviousIntent(message.Intent);
             }
         }
 
@@ -92,6 +103,51 @@ namespace SimpleChatBot.Service
                 result += o.GetResopnseMessage() + "<br/>";
             });
             return result;
+        }
+
+        private void QueryOrder(Message message)
+        {
+            var mobile = message.Entity.Replace("-", "");
+            _sessionWapper.SetMobile(mobile);
+            var orders = _sessionWapper.GetOrders();
+            if(orders == null)
+            {
+                orders = _orderDetailDAL.GetOrders(mobile);
+                _sessionWapper.SetOrders(orders);
+            }
+            
+            if(orders == null || orders.Count == 0)
+            {
+                message.ResponseContent = "查無您的訂單資料！";
+            }
+            else
+            {
+                message.ResponseContent = this.SetOrderDetailsResponseContent(orders);
+            }
+        }
+
+        private void CancelOrder(Message message)
+        {
+            var i = 0;
+            if(int.TryParse(message.SendContent, out i))
+            {
+                var orderId = Convert.ToInt32(message.SendContent);
+                var mobile = _sessionWapper.GetMobile();
+                var isSuccess =_orderDetailDAL.CancelOrder(mobile, orderId);
+                if(isSuccess)
+                {
+                    message.ResponseContent = ResponseContent.CancelOrderSuccess;
+                    _sessionWapper.SetOrders(null);
+                }
+                else
+                {
+                    message.ResponseContent = ResponseContent.CancelOrderFailed;
+                }
+            }
+            else
+            {
+                message.ResponseContent = ResponseContent.Unrecognizable;
+            }
         }
     }
 }
